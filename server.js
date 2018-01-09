@@ -20,17 +20,27 @@ let redirectLoggedOutUserToLogin = (req,res)=>{
   if(req.urlIsOneOf(['/','/home','/logout']) && !req.user) res.redirect('/login');
 }
 
+const servePage = function(fileSystem,filePath,res){
+  res.setHeader('Content-Type',`${getContentType(filePath)}`);
+  res.write(fileSystem.readFileSync(filePath));
+  res.end();
+}
+
 let servePages = function(req,res){
   if (get(req,'/')) {
     res.redirect('/index.html');
     return;
   }
-  let url = req.url;
-  servePage(res,url,fs);
+  let filePath = './public'+req.url;
+  if (fs.existsSync(filePath)) {
+    servePage(fs,filePath,res);
+  } else {
+    handleFileNotFound(res);
+  }
+  return ;
 }
 
 const addCommentHandler = function(req,res){
-  console.log(req.url);
   if (post(req,'/Submit')) {
     let content = "";
     req.on('data',(data)=>content+=data.toString());
@@ -40,8 +50,6 @@ const addCommentHandler = function(req,res){
     res.end();
   }
 }
-
-
 
 const getContentType = function(fileName){
   let fileExtension = getFileExtension(fileName);
@@ -60,23 +68,12 @@ const getContentType = function(fileName){
 
 const handleFileNotFound = function(res){
   res.writeHead(404, 'Not Found', {'Content-Type':'text/plain'});
+  res.write('File Not Found');
   res.end();
 }
 
 const getFileExtension = function(fileName){
   return fileName.slice(fileName.lastIndexOf('.'));;
-};
-
-const servePage = function(res,url,fileSystem){
-  let filePath = './public'+url;
-  if (fileSystem.existsSync(filePath)) {
-    res.setHeader('Content-Type',`${getContentType(filePath)}`);
-    res.write(fileSystem.readFileSync(filePath));
-    res.end();
-  } else {
-    handleFileNotFound(res);
-  }
-  return ;
 };
 
 const get = function(req,url) {
@@ -100,16 +97,11 @@ const storeResponseAndRedirectTo = function(res,content,redirectPath) {
   res.redirect(redirectPath);
 }
 
-const serveGuestBookPage = function(req,res){
-  res.redirect('/login');
-  return ;
-}
-
 let app = WebApp.create();
 app.use(loadUser);
-app.post('/Submit',addCommentHandler)
-app.use(servePages);
-// app.get('/guestBook.html',serveGuestBookPage);
+app.post('/Submit',addCommentHandler);
+app.get('default',servePages);
+app.postProcess(servePages);
 
 const PORT = 8000;
 let server = http.createServer(app);
