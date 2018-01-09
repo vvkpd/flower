@@ -1,0 +1,43 @@
+.container {
+  height: 670px;
+  width: 1000px;
+  margin: 20px auto;
+}
+
+.subTitle {
+  width: 1000px;
+  text-align: center;
+  padding-top: 10px;
+  height: 60px;
+  color: orange;
+  font-size: 30px;
+}
+
+.main {
+  height: 600px;
+  width: 1000px;
+  font-size: 18px;
+}
+
+.leftPart {
+  height: 600px;
+  width: 600px;
+  float: left;
+  background-size: cover;
+  background-image: url('../images/pbase-Abeliophyllum.jpg');
+}
+
+.rightPart {
+  height: 500px;
+  width: 400px;
+  padding-top: 100px;
+  float: left;
+}
+
+span {
+  font-weight: bold;;
+}
+
+#comment {
+  resize: none;
+}

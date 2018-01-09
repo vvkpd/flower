@@ -1,0 +1,42 @@
+.container{
+  height: 870px;
+  width: 1000px;
+  margin: 20px auto;
+}
+
+.title {
+  height: 100px;
+  width: 100%;
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.subTitle {
+  padding-left: 700px;
+  width: 300px;
+  height: 60px;
+  color: orange;
+  padding-top: 10px;
+  font-size: 30px;
+}
+
+.main{
+  height: 700px;
+  width: 1000px;
+}
+
+.imagePart{
+  height: 100%;
+  width: 800px;
+  float: left;
+  border: 1px solid black;
+  background-image: url('../images/freshorigins.jpg');
+}
+
+.linkPart{
+  height: 69%;
+  width: 198px;
+  float: left;
+  padding-top: 30%;
+}

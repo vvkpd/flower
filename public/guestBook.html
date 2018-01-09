@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Guest Book</title>
+    <link rel="stylesheet" href="css/other.css">
+    <script src="js/data.js" charset="utf-8"></script>
+    <script src="js/renderData.js" charset="utf-8"></script>
+    <link rel="shortcut icon" href="images/favicon.ico"type="image/x-icon">
+  </head>
+  <body onload="getComments(commentsData)">
+    <div class="container">
+      <div class="subTitle">
+        <a href="index.html"><<</a>
+        Guest Book
+      </div>
+      <div class="main">
+        <h3>Leave a comment</h3>
+        <form action="Submit" method="post">
+          Name: <input name="Name" type="text" required><br><br>
+          Comment: <textarea name="Comment" id="comment" required></textarea><br>
+          <button type="Submit">Submit</button>
+        </form>
+        <hr>
+        DATETIME_NAME_COMMENTS_LIST <br><br>
+        <table id="commentTable">
+
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
