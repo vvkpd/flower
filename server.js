@@ -30,15 +30,18 @@ let servePages = function(req,res){
 }
 
 const addCommentHandler = function(req,res){
+  console.log(req.url);
   if (post(req,'/Submit')) {
     let content = "";
     req.on('data',(data)=>content+=data.toString());
     req.on('end',function(){
       storeResponseAndRedirectTo(res,content,'/guestBook.html');
     })
-    return;
+    res.end();
   }
 }
+
+
 
 const getContentType = function(fileName){
   let fileExtension = getFileExtension(fileName);
@@ -55,9 +58,9 @@ const getContentType = function(fileName){
   return contentType[fileExtension];
 };
 
-const handleFileNotFound = function(){
-  this.writeHead(404, 'Not Found', {'Content-Type':'text/plain'});
-  this.end();
+const handleFileNotFound = function(res){
+  res.writeHead(404, 'Not Found', {'Content-Type':'text/plain'});
+  res.end();
 }
 
 const getFileExtension = function(fileName){
@@ -66,9 +69,13 @@ const getFileExtension = function(fileName){
 
 const servePage = function(res,url,fileSystem){
   let filePath = './public'+url;
-  res.setHeader('Content-Type',`${getContentType(filePath)}`);
-  res.write(fileSystem.readFileSync(filePath))
-  res.end();
+  if (fileSystem.existsSync(filePath)) {
+    res.setHeader('Content-Type',`${getContentType(filePath)}`);
+    res.write(fileSystem.readFileSync(filePath));
+    res.end();
+  } else {
+    handleFileNotFound(res);
+  }
   return ;
 };
 
@@ -93,13 +100,18 @@ const storeResponseAndRedirectTo = function(res,content,redirectPath) {
   res.redirect(redirectPath);
 }
 
+const serveGuestBookPage = function(req,res){
+  res.redirect('/login');
+  return ;
+}
 
 let app = WebApp.create();
 app.use(loadUser);
-// app.post('/Submit',addCommentHandler)
+app.post('/Submit',addCommentHandler)
 app.use(servePages);
+// app.get('/guestBook.html',serveGuestBookPage);
 
-const PORT = 5000;
+const PORT = 8000;
 let server = http.createServer(app);
 server.on('error',e=>console.error('**error**',e.message));
 server.listen(PORT,(e)=>console.log(`server listening at ${PORT}`));
