@@ -1,18 +1,22 @@
+const parseBody = require('querystring').parse;
+
 const toKeyValue = kv=>{
     let parts = kv.split('=');
     return {key:parts[0].trim(),value:parts[1].trim()};
 };
+
 const accumulate = (o,kv)=> {
   o[kv.key] = kv.value;
   return o;
 };
-const parseBody = text=> text && text.split('&').map(toKeyValue).reduce(accumulate,{}) || {};
+
 let redirect = function(path){
   console.log(`redirecting to ${path}`);
   this.statusCode = 302;
   this.setHeader('location',path);
   this.end();
 };
+
 const parseCookies = text=> {
   try {
     return text && text.split(';').map(toKeyValue).reduce(accumulate,{}) || {};
@@ -20,6 +24,7 @@ const parseCookies = text=> {
     return {};
   }
 }
+
 let invoke = function(req,res){
   let handler = this._handlers[req.method][req.url];
   handler = !handler ? this._handlers[req.method]['default'] : handler;
