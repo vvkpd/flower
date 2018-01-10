@@ -41,14 +41,7 @@ let servePages = function(req,res){
 }
 
 const addCommentHandler = function(req,res){
-  if (post(req,'/Submit')) {
-    let content = "";
-    req.on('data',(data)=>content+=data.toString());
-    req.on('end',function(){
-      storeResponseAndRedirectTo(res,content,'/guestBook.html');
-    })
-    res.end();
-  }
+  if (post(req,'/Submit')) storeResponseAndRedirectTo(res,req.body,'/guestBook.html');
 }
 
 const getContentType = function(fileName){
@@ -85,9 +78,8 @@ const post = function(req,url) {
 }
 
 const getCommentInfo = function(commentInfo){
-  let nameAndComment = qs.parse(commentInfo.toString());
-  nameAndComment['date'] = new Date().toLocaleString();
-  return nameAndComment;
+  commentInfo['date'] = new Date().toLocaleString();
+  return commentInfo;
 }
 
 
