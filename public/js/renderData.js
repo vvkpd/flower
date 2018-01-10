@@ -18,6 +18,7 @@ const getAllComments = function(comments){
 }
 
 
-const getComments = function(commentsData){
+const getComments = function(){
   document.getElementById("commentTable").innerHTML = getAllComments(commentsData);
 }
+window.onload = getComments;
