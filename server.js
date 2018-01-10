@@ -6,7 +6,7 @@ const addComment = require('./storeComments.js').addComment;
 const getContentType = require('./contentType.js').getContentType;
 
 
-let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'harshab',name:'Harsha Vardhana'}];
+let registered_users = [{Name:'vivek', Password:'123'}];
 
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
@@ -15,6 +15,7 @@ let loadUser = (req,res)=>{
     req.user = user;
   }
 };
+
 let redirectLoggedInUserToHome = (req,res)=>{
   if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/home');
 }
@@ -72,10 +73,33 @@ const storeResponseAndRedirectTo = function(res,content,redirectPath) {
   res.redirect(redirectPath);
 }
 
+const handleGuestBookPage = function(req,res){
+  if (!req.user){
+    res.redirect('login.html');
+    return ;
+  }
+}
+
+const handleLoginPage = function(req,res){
+  let user = registered_users.find(u=>u.Name==req.body.Name);
+  if(!user) {
+    res.setHeader('Set-Cookie',`logInFailed=true`);
+    res.redirect('/login.html');
+    return;
+  }
+  let sessionid = new Date().getTime();
+  res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
+  user.sessionid = sessionid;
+  res.redirect('/guestBook.html');
+  res.end();
+}
+
 let app = WebApp.create();
 app.use(loadUser);
 app.post('/Submit',addCommentHandler);
 app.get('default',servePages);
+app.get('/guestBook.html',handleGuestBookPage);
+app.post('/login',handleLoginPage);
 app.postProcess(servePages);
 
 const PORT = 8000;
