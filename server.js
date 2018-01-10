@@ -3,6 +3,8 @@ const http = require('http');
 const WebApp = require('./webapp');
 const qs = require('querystring');
 const addComment = require('./storeComments.js').addComment;
+const getContentType = require('./contentType.js').getContentType;
+
 
 let registered_users = [{userName:'bhanutv',name:'Bhanu Teja Verma'},{userName:'harshab',name:'Harsha Vardhana'}];
 
@@ -44,30 +46,11 @@ const addCommentHandler = function(req,res){
   if (post(req,'/Submit')) storeResponseAndRedirectTo(res,req.body,'/guestBook.html');
 }
 
-const getContentType = function(fileName){
-  let fileExtension = getFileExtension(fileName);
-  let contentType = {
-    '.html': 'text/html',
-    '.css': 'text/css',
-    '.js': 'text/javascript',
-    '.jpg': 'image/jpg',
-    '.gif': 'image/gif',
-    '.pdf': 'application/pdf',
-    '.json': 'application/json',
-    '.ico': 'image/x-icon'
-  }
-  return contentType[fileExtension];
-};
-
 const handleFileNotFound = function(res){
   res.writeHead(404, 'Not Found', {'Content-Type':'text/plain'});
   res.write('File Not Found');
   res.end();
 }
-
-const getFileExtension = function(fileName){
-  return fileName.slice(fileName.lastIndexOf('.'));;
-};
 
 const get = function(req,url) {
   return req.method == "GET" && req.url == url;
