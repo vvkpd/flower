@@ -1,12 +1,10 @@
 let fs = require('fs');
 const http = require('http');
-const WebApp = require('./webapp');
+const WebApp = require('./lib/webapp.js');
 const qs = require('querystring');
-const addComment = require('./storeComments.js').addComment;
-const getContentType = require('./contentType.js').getContentType;
-
-
-let registered_users = [{Name:'vivek', Password:'123'}];
+const addComment = require('./lib/storeComments.js').addComment;
+const getContentType = require('./lib/contentType.js').getContentType;
+const registered_users = require('./lib/registerUser.js').registered_users;
 
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
@@ -75,7 +73,7 @@ const storeResponseAndRedirectTo = function(res,content,redirectPath) {
 
 const handleGuestBookPage = function(req,res){
   if (!req.user){
-    res.redirect('login.html');
+    res.redirect('guest.html');
     return ;
   }
 }

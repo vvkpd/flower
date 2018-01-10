@@ -15,8 +15,7 @@
         Guest Book
       </div>
       <div class="main">
-        <h3>Leave a comment</h3>
-        <a href="logout"><h4>logout</h4></a>
+        <h3>Leave a comment <span style="float:right"><a href="logout">logout</a></span></h3>
         <form action="Submit" method="post">
           Name: <input name="Name" type="text" required><br><br>
           Comment: <textarea name="Comment" id="comment" required></textarea><br>
@@ -24,9 +23,7 @@
         </form>
         <hr>
         DATETIME_NAME_COMMENTS_LIST <br><br>
-        <table id="commentTable">
-
-        </table>
+        <table id="commentTable"></table>
       </div>
     </div>
   </body>
