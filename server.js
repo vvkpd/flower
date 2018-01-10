@@ -94,12 +94,19 @@ const handleLoginPage = function(req,res){
   res.end();
 }
 
+const handleLogout = function(req,res) {
+  res.setHeader('Set-Cookie',[`loginFailed=false,Expires=${new Date(1).toUTCString()}`,`sessionid=0,Expires=${new Date(1).toUTCString()}`]);
+  delete req.user.sessionid;
+  res.redirect('/login.html');
+}
+
 let app = WebApp.create();
 app.use(loadUser);
 app.post('/Submit',addCommentHandler);
 app.get('default',servePages);
 app.get('/guestBook.html',handleGuestBookPage);
 app.post('/login',handleLoginPage);
+app.get('/logout',handleLogout);
 app.postProcess(servePages);
 
 const PORT = 8000;
