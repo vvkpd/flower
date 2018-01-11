@@ -1,17 +1,22 @@
 const http = require('http');
 const WebApp = require('./lib/webapp.js');
-const lib = require('./lib/serverLib.js').lib;
+const lib = require('./lib/serverLib.js');
 const PORT = 8000;
 
 let app = WebApp.create();
 
 app.use(lib.loadUser);
-app.get('/guestBook.html',lib.handleGuestBookPage);
-app.get('default',lib.servePages);
-app.post('/Submit',lib.addCommentHandler);
-app.post('/login',lib.handleLoginPage);
-app.get('/logout',lib.handleLogout);
-app.postProcess(lib.servePages);
+app.get('/guestbook.html',lib.handleGuestBookPage);
+app.get('/',(req,res)=>{
+  req.url = '/index.html';
+  lib.serveStaticPage(req,res);
+});
+
+app.post('/addcomment',lib.addCommentHandler);
+app.post('/login',lib.LoginPageHandler);
+app.get('/logout',lib.LogoutPageHandler);
+
+app.postProcess(lib.serveStaticPage);
 
 let server = http.createServer(app);
 server.on('error',e=>console.error('**error**',e.message));
